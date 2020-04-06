@@ -11,6 +11,10 @@
 
 This adapter uses phpseclib to provide a SFTP adapter for Flysystem.
 
+## Gunar notes:
+
+Issue I bumped into manifesting as: Invalid character sent but ignored.... ,so here is the link: https://github.com/thephpleague/flysystem/pull/1114 ,and only I done here is adding code to ( class SftpAdapter extends AbstractFtpAdapter ) as normalizePermissions() function with proper FIX
+
 ## Installation
 
 ```bash
