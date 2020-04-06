@@ -629,4 +629,35 @@ class SftpAdapter extends AbstractFtpAdapter
 
         return false;
     }
+    
+        
+    /* G ADDED FIX */
+	protected function normalizePermissions($permissions)
+    {
+    	
+    	if (is_numeric($permissions)) {
+    		//FIX for SFTP + PHP7.4 https://github.com/thephpleague/flysystem/pull/1114/commits/35764d2c622313375a99013312a0a0274e3532dd    AND   https://github.com/thephpleague/flysystem/pull/1114
+            return $permissions & 0777;
+        }
+		
+		
+        // remove the type identifier
+        $permissions = substr($permissions, 1);
+
+        // map the string rights to the numeric counterparts
+        $map = ['-' => '0', 'r' => '4', 'w' => '2', 'x' => '1'];
+        $permissions = strtr($permissions, $map);
+
+        // split up the permission groups
+        $parts = str_split($permissions, 3);
+
+        // convert the groups
+        $mapper = function ($part) {
+            return array_sum(str_split($part));
+        };
+
+        // converts to decimal number
+        return octdec(implode('', array_map($mapper, $parts)));
+    }
+	/* END OF G ADDED FIX */
 }
